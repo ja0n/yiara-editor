@@ -1,7 +1,8 @@
 export default class DirectorMode {
 	constructor(el) {
-		let canvas = document.querySelector(el);
+		let canvas = typeof el === 'string' ? document.querySelector(el) : el;
 		this.ctx = canvas.getContext('2d');
+    console.log(this.ctx);
 		if (!canvas || !this.ctx) throw new Error({'Error': 'Canvas element not found.'});
 		this.actors = [];
 		this.editing = true;
@@ -184,7 +185,8 @@ export default class DirectorMode {
 	  this.mousedown.y = loc.y;
 	}
 	windowToCanvas(x, y) {
-		var bbox = this.ctx.canvas.getBoundingClientRect();
+    const canvas = this.ctx.canvas;
+		var bbox = canvas.getBoundingClientRect();
 	  return { x: x - bbox.left * (canvas.width  / bbox.width),
 	           y: y - bbox.top  * (canvas.height / bbox.height) };
 	}
