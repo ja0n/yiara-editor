@@ -23,6 +23,7 @@ export default class DirectorMode {
 			e.preventDefault();
 			let loc = this.windowToCanvas(e.clientX, e.clientY);
 
+      console.debug('mousedown', loc);
 			this.selected = null;
 			this.scene.actors.forEach(actor => {
 				// if (isPointInActor(loc.x - this.offsetX, loc.y - this.offsetY, actor)) {
@@ -335,7 +336,8 @@ function isPointInActor(x, y, actor) {
 function isPointInCircle(x, y, actor) {
 	if (!actor.radius) return false;
 
-  return Math.sqrt(squared(x - actor.x) + squared(y - actor.y)) <= actor.radius;
+  const distance = squared(x - (actor.x + actor.radius)) + squared(y - (actor.y + actor.radius));
+  return distance <= squared(actor.radius);
 }
 
 function isPointInRect(x, y, actor) {
