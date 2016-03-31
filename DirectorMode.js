@@ -22,13 +22,16 @@ export default class DirectorMode {
 
     canvas.addEventListener('mousedown', e => {
       e.preventDefault();
-      let loc = this.windowToCanvas(e.clientX, e.clientY);
+      const loc = this.windowToCanvas(e.clientX, e.clientY);
+      const locNormalized = { x: this.normalizeX(loc.x), y: this.normalizeY(loc.y) };
 
       console.debug('mousedown', loc);
+      console.debug('mousedown (normalized)', locNormalized);
+      console.debug(`normalize debug | offsetX: ${this.offsetX} scale: ${this.scale}`);
+
       this.selected = null;
       this.scene.actors.forEach(actor => {
-        // if (isPointInActor(loc.x - this.offsetX, loc.y - this.offsetY, actor)) {
-        if (isPointInActor(this.normalizeX(loc.x), this.normalizeY(loc.y), this.anchor(actor))) {
+        if (isPointInActor.call(this, loc.x, loc.y, this.anchor(actor))) {
           this.startDragging(loc);
           this.removeActor(actor);
           this.addActor(actor);
@@ -81,7 +84,7 @@ export default class DirectorMode {
         return;
       }
 
-      let colliding = this.actorsInPoint(this.normalizeX(loc.x), this.normalizeY(loc.y));
+      let colliding = this.actorsInPoint(loc.x, loc.y);
       this.cursor('auto');
       if (colliding.length > 0) {
         this.cursor('pointer');
@@ -162,22 +165,28 @@ export default class DirectorMode {
   }
 
   drawGrid(color, stepx, stepy) {
+    this.ctx.save();
     this.ctx.strokeStyle = color;
     this.ctx.lineWidth = 0.5;
 
-    for (let i = stepx + 0.5; i < this.width; i += stepx) {
+    const width = this.width/this.scale;
+    const height = this.height/this.scale;
+
+    for (let i = stepx + 0.5; i < width; i += stepx) {
       this.ctx.beginPath();
       this.ctx.moveTo(i - this.offsetX, 0 - this.offsetY);
-      this.ctx.lineTo(i - this.offsetX, this.height - this.offsetY);
+      this.ctx.lineTo(i - this.offsetX, height - this.offsetY);
       this.ctx.stroke();
     }
 
-    for (let i = stepy + 0.5; i < this.height; i += stepy) {
+    for (let i = stepy + 0.5; i < height; i += stepy) {
       this.ctx.beginPath();
       this.ctx.moveTo(0 - this.offsetX, i - this.offsetY);
-      this.ctx.lineTo(this.width - this.offsetX, i - this.offsetY);
+      this.ctx.lineTo(width - this.offsetX, i - this.offsetY);
       this.ctx.stroke();
     }
+
+    this.ctx.restore();
   }
   clearCanvas() {
     this.ctx.clearRect(0, 0, this.width, this.height);
@@ -190,7 +199,7 @@ export default class DirectorMode {
     const canvas = this.ctx.canvas;
     var bbox = canvas.getBoundingClientRect();
     return { x: x - bbox.left * (canvas.width  / bbox.width),
-      y: y - bbox.top  * (canvas.height / bbox.height) };
+             y: y - bbox.top  * (canvas.height / bbox.height) };
   }
   drawHorizontalLine (y) {
     this.ctx.beginPath();
@@ -260,7 +269,7 @@ export default class DirectorMode {
     let img = new Image();
     img.src = img.fileName = src;
     img.addEventListener('load', loaded);
-    img.addEventListener('error', loaded);
+    img.addEventListener('error', error);
 
     return img;
   }
@@ -282,7 +291,7 @@ export default class DirectorMode {
     // }
   }
   actorsInPoint(x, y) {
-    let arr = this.scene.actors.filter(actor => isPointInActor(x, y, this.anchor(actor)));
+    let arr = this.scene.actors.filter(actor => isPointInActor.call(this, x, y, this.anchor(actor)));
 
     // if (arr.length == 1) arr = arr[0];
     return arr;
@@ -319,12 +328,16 @@ export default class DirectorMode {
     return (y - this.offsetY)/this.scale;
     // return (y - this.offsetY)/this.scale;
   }
+
   round(number) {
     return +(Math.round(number * 2) / 2).toFixed(1)
   }
 }
 
 function isPointInActor(x, y, actor) {
+  x = x/this.scale - this.offsetX;
+  y = y/this.scale - this.offsetY;
+
   if (actor.radius) {
     return isPointInCircle(x, y, actor);
   }
