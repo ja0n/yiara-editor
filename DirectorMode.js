@@ -19,6 +19,8 @@ export default class DirectorMode {
     this.anchorX = 0.5;
     this.anchorY = 0.5;
     this.scale = 1;
+    this.minScale = 0.5;
+    this.maxScale = 4;
 
     canvas.addEventListener('mousedown', e => {
       e.preventDefault();
@@ -106,7 +108,14 @@ export default class DirectorMode {
     canvas.addEventListener('mousewheel', e => {
       e.preventDefault();
 
-      this.scale += e.deltaY > 0 ? -0.1 : 0.1;
+      if (e.deltaY > 0) {
+        if (!(this.scale - 0.1 < this.minScale)) 
+          this.scale -= 0.1;
+      } else {
+        if (!(this.scale + 0.1 > this.maxScale))
+          this.scale += 0.1;
+      }
+
       this.runCycle();
     });
 
