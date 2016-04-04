@@ -213,13 +213,13 @@ export default class DirectorMode {
   drawHorizontalLine (y) {
     this.ctx.beginPath();
     this.ctx.moveTo(0 - this.offsetX, y+0.5);
-    this.ctx.lineTo(this.width, y+0.5);
+    this.ctx.lineTo(0 - this.offsetX + this.width/this.scale, y+0.5);
     this.ctx.stroke();
   }
   drawVerticalLine  (x) {
     this.ctx.beginPath();
     this.ctx.moveTo(x+0.5, 0 - this.offsetY);
-    this.ctx.lineTo(x+0.5, this.height);
+    this.ctx.lineTo(x+0.5, 0 - this.offsetY + this.height/this.scale);
     this.ctx.stroke();
   }
   drawGuidewires(x, y) {
