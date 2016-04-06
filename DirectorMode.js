@@ -173,22 +173,25 @@ export default class DirectorMode {
     return this.state === state;
   }
 
-  drawGrid(color, stepx, stepy) {
+  drawGrid(color = 'lightgrey', stepX = 25, stepY = 25) {
     this.ctx.save();
     this.ctx.strokeStyle = color;
     this.ctx.lineWidth = 0.5;
 
     const width = this.width/this.scale;
     const height = this.height/this.scale;
-
-    for (let i = stepx + 0.5; i < width; i += stepx) {
+    
+    const startX = this.offsetX % stepX;
+    const startY = this.offsetY % stepY;
+    
+    for (let i = startX + 0.5; i < width; i += stepX) {
       this.ctx.beginPath();
       this.ctx.moveTo(i - this.offsetX, 0 - this.offsetY);
       this.ctx.lineTo(i - this.offsetX, height - this.offsetY);
       this.ctx.stroke();
     }
 
-    for (let i = stepy + 0.5; i < height; i += stepy) {
+    for (let i = startY + 0.5; i < height; i += stepY) {
       this.ctx.beginPath();
       this.ctx.moveTo(0 - this.offsetX, i - this.offsetY);
       this.ctx.lineTo(width - this.offsetX, i - this.offsetY);
