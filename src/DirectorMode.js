@@ -2,9 +2,9 @@ export default class DirectorMode {
   constructor(el) {
     let canvas = typeof el === 'string' ? document.querySelector(el) : el;
     this.ctx = canvas.getContext('2d');
-    
+
     if (!canvas || !this.ctx) throw new Error({'Error': 'Canvas element not found.'});
-    
+
     this.actors = [];
     this.editing = true;
     this.dragging = false;
@@ -109,7 +109,7 @@ export default class DirectorMode {
       e.preventDefault();
 
       if (e.deltaY > 0) {
-        if (!(this.scale - 0.1 < this.minScale)) 
+        if (!(this.scale - 0.1 < this.minScale))
           this.scale -= 0.1;
       } else {
         if (!(this.scale + 0.1 > this.maxScale))
@@ -119,11 +119,11 @@ export default class DirectorMode {
       this.runCycle();
     });
 
-    addEventListener('mousedown', e =>{
+    window.addEventListener('mousedown', e =>{
       this.canvasFocus = e.target == canvas;
     });
 
-    addEventListener('keydown', e => {
+    window.addEventListener('keydown', e => {
       if (!this.canvasFocus) return;
 
       this.vOffsetX += this.vOffsetX < this.vMaxOffsetX ? 1 : 0;
@@ -146,7 +146,7 @@ export default class DirectorMode {
       if (this.onDrag) this.onDrag();
     });
 
-    addEventListener('keyup', e => {
+    window.addEventListener('keyup', e => {
       if (!this.canvasFocus) return;
       this.vOffsetX = this.vOffsetY = 0;
     });
@@ -180,10 +180,10 @@ export default class DirectorMode {
 
     const width = this.width/this.scale;
     const height = this.height/this.scale;
-    
+
     const startX = this.offsetX % stepX;
     const startY = this.offsetY % stepY;
-    
+
     for (let i = startX + 0.5; i < width; i += stepX) {
       this.ctx.beginPath();
       this.ctx.moveTo(i - this.offsetX, 0 - this.offsetY);
