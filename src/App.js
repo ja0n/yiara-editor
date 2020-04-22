@@ -6,11 +6,18 @@ const scenes = require('./model.json');
 
 
 function App() {
-  return (
-    <div className="App">
-      <Canvas scenes={{ data: [scenes], selectedIndex: 0 }} />
-    </div>
-  );
+	const [running, setRunning] = React.useState(false);
+
+	return (
+		<div className="App">
+			<Canvas scenes={{ data: [scenes], selectedIndex: 0 }} running={running} />
+			<div>
+				<button onClick={() => setRunning(!running)}>
+					{ running ? 'Stop' : 'Run' }
+				</button>
+			</div>
+		</div>
+	);
 }
 
 export default App;

@@ -1,28 +1,51 @@
 import React from 'react';
+import styled from 'styled-components';
+import Runner from 'kurupira-runner';
 import DirectorMode from '../DirectorMode';
 
-const style = {
+const Container = styled.div({
   height: 400,
   width: 600,
   margin: 20,
   textAlign: 'center',
   display: 'inline-block',
-};
+});
+
+const Preview = styled.div`
+  width: 600px;
+  height: 400px;
+  visibility: hidden;
+  overflow: hidden;
+`;
+
+const CanvasContainer = styled.div`
+  position: relative;
+  width: 600px;
+  height: 400px;
+
+  > * {
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+`;
+
 
 class Canvas extends React.Component {
-  setupRef(ref) {
-    const director = this.directorInstance = new DirectorMode(ref);
-    const { scenes } = this.props;
-    const data = scenes.data[scenes.selectedIndex];
+  constructor () {
+    super();
+    this.state = { running: false };
+  }
 
-    director.runGame = function() {
-      localStorage.setItem('stage', JSON.stringify(data));
-      window.open('/runner.html', '_blank', 'height=650,width=850');
-    };
+  setupCanvas(ref) {
+    if (!ref)
+      return null;
+
+    const director = this.directorInstance = new DirectorMode(ref);
 
     //  director.runCycle();
-
-    director.loadScene(data);
+    const scene = this.getCurrentScene();
+    director.loadScene(scene);
     director.onSelect = (actor) => {
       console.log(actor);
     };
@@ -31,17 +54,54 @@ class Canvas extends React.Component {
     };
   }
 
-  render() {
-    return (
-      <div style={style}>
-        <canvas width="600" height="400" ref={ref => this.setupRef(ref)}>
-          no support
-        </canvas>
+  setupPreview(ref) {
+    this.previewRef = ref;
+  }
 
-        <button onClick={() => this.directorInstance.runGame()}>
-          Run
-        </button>
-      </div>
+  getCurrentScene() {
+    const { scenes } = this.props;
+    const { data, selectedIndex } = scenes;
+    return data[selectedIndex];
+  }
+
+  preview() {
+    const { running } = this.state
+    const { previewRef } = this;
+    const nextState = !running;
+
+    previewRef.style.visibility = nextState ? 'unset' : 'hidden';
+
+    if (nextState) {
+      const scene = this.getCurrentScene();
+      const Game = new Runner(scene, this.previewRef);
+      Game.addMouseConstraint();
+      Game.run();
+    } else {
+      previewRef.removeChild(previewRef.children[0])
+    }
+
+    this.setState({ running: nextState });
+  }
+
+  shouldComponentUpdate(nextProps) {
+    if (this.props.running !== nextProps.running)
+      this.preview();
+    return false;
+  }
+
+  render() {
+    const { running } = this.state;
+    return (
+      <Container>
+        <CanvasContainer running={running}>
+          <canvas width="600" height="400" ref={ref => this.setupCanvas(ref)}>
+            no support
+          </canvas>
+          <Preview ref={ref => this.setupPreview(ref)}>
+
+          </Preview>
+        </CanvasContainer>
+      </Container>
     );
   }
 }
