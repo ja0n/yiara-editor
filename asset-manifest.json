@@ -1,0 +1,22 @@
+{
+  "files": {
+    "main.css": "/yiara-editor/static/css/main.8ab6f918.chunk.css",
+    "main.js": "/yiara-editor/static/js/main.d64fa6ce.chunk.js",
+    "main.js.map": "/yiara-editor/static/js/main.d64fa6ce.chunk.js.map",
+    "runtime-main.js": "/yiara-editor/static/js/runtime-main.bede2f38.js",
+    "runtime-main.js.map": "/yiara-editor/static/js/runtime-main.bede2f38.js.map",
+    "static/js/2.7d1fd2f6.chunk.js": "/yiara-editor/static/js/2.7d1fd2f6.chunk.js",
+    "static/js/2.7d1fd2f6.chunk.js.map": "/yiara-editor/static/js/2.7d1fd2f6.chunk.js.map",
+    "index.html": "/yiara-editor/index.html",
+    "precache-manifest.a34ebe071cc435468a9dbcb1d63e553b.js": "/yiara-editor/precache-manifest.a34ebe071cc435468a9dbcb1d63e553b.js",
+    "service-worker.js": "/yiara-editor/service-worker.js",
+    "static/css/main.8ab6f918.chunk.css.map": "/yiara-editor/static/css/main.8ab6f918.chunk.css.map",
+    "static/js/2.7d1fd2f6.chunk.js.LICENSE.txt": "/yiara-editor/static/js/2.7d1fd2f6.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.bede2f38.js",
+    "static/js/2.7d1fd2f6.chunk.js",
+    "static/css/main.8ab6f918.chunk.css",
+    "static/js/main.d64fa6ce.chunk.js"
+  ]
+}
