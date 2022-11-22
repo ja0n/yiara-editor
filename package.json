@@ -9,7 +9,7 @@
     "kurupira-runner": "https://github.com/ja0n/kurupira-runner-html5.git#dist",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
-    "react-scripts": "3.4.1",
+    "react-scripts": "5.0.1",
     "styled-components": "^5.1.0"
   },
   "scripts": {
